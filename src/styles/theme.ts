@@ -1,8 +1,10 @@
 const theme = {
-  colors: {
-    background: '#121214',
-    text: '#e1e1e6',
-    primary: '#8257e6'
+  dark: {
+    background: '#192c38',
+    backgroundSide: '#0f212e',
+    backgroundChatSender: '#213743',
+    backgroundMatches: '#213743',
+    textPrimary: '#FFFFFF'
   }
 }
 

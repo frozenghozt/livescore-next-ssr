@@ -8,8 +8,19 @@ export default createGlobalStyle`
   }
 
   body {
-    background: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
+    background: ${props => props.theme.dark.background};
+    color: ${props => props.theme.dark.textPrimary};
     font: 400 16px Roboto, sans-serif;
+  }
+
+  /* ScrollBar */
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2d424f;
+    border-radius: 10px;
   }
 `

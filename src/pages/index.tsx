@@ -1,22 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
+import { gql } from '@apollo/client'
+import { client } from '../helpers/apollo'
+// Components
+import Slider from '../Components/Main/Body/Slider/Slider'
+import PreferenceBar from '../Components/Main/Body/PreferenceBar/PreferenceBar'
+import Results from '../Components/Main/Body/Results/Results'
+// Context
+import { MatchesProvider } from '../context/MatchesContext'
 
-import RocketseatLogo from '../assets/rocketseat.svg'
+type Match = {
+  id: number
+  awayteam: string
+  competition: string
+  country: string
+  countrycode: string
+  hometeam: string
+  status: string
+  winner: string
+}
 
-import { Container } from '../styles/pages/Home'
+type DataTypes = {
+  data: {
+    getMatchesByDate: {
+      competitions: string[]
+      matches: Array<Match>
+    }
+  }
+}
 
-const Home: React.FC = () => {
+const Home = ({ data }: DataTypes): JSX.Element => {
+  const [isAlive, setIsAlive] = useState(false)
+  const matches = data.getMatchesByDate
   return (
-    <Container>
+    <>
       <Head>
         <title>Homepage</title>
       </Head>
-
-      <RocketseatLogo />
-      <h1>ReactJS Structure</h1>
-      <p>A ReactJS + Next.js structure made by Rocketseat.</p>
-    </Container>
+      <MatchesProvider value={{ isAlive, setIsAlive, data: matches }}>
+        <Slider />
+        <PreferenceBar />
+        <Results />
+      </MatchesProvider>
+    </>
   )
+}
+
+export const getServerSideProps = async (): Promise<typeof data> => {
+  const { data } = await client.query({
+    query: gql`
+      query {
+        getMatchesByDate(date: "adate") {
+          competitions
+          matches {
+            id
+            hometeam
+            awayteam
+            competition
+            country
+            countrycode
+            status
+            winner
+          }
+        }
+      }
+    `
+  })
+
+  return { props: { data } }
 }
 
 export default Home
