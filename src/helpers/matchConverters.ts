@@ -6,3 +6,7 @@ export const statusConverter = (oldStatus: string): string => {
       return oldStatus
   }
 }
+
+export const slugConverter = (str: string): string => {
+  return str.replace(/-/g, '')
+}

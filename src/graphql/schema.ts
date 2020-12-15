@@ -36,11 +36,25 @@ export const typeDefs = gql`
     awayteam: Int
   }
 
+  type loginResponse {
+    accessToken: String!
+  }
+
   type Mutation {
-    createUser(email: String!, username: String!, password: String!): User!
+    createUser(
+      email: String!
+      username: String!
+      password: String!
+      repeatedpw: String!
+    ): User!
+    login(username: String!, password: String!): loginResponse
   }
 
   type Query {
     getMatchesByDate(date: String!): Matches
+  }
+
+  type Subscription {
+    messageAdded(message: String): String!
   }
 `

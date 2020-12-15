@@ -31,6 +31,7 @@ export const Result = styled.span`
   padding: 3px 3px;
   border-radius: 3px;
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
 `
 
 export const TeamOne = styled.span`

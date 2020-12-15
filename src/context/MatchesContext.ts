@@ -9,14 +9,22 @@ type Match = {
   hometeam: string
   status: string
   winner: string
+  fulltime: {
+    hometeam: string
+    awayteam: string
+  }
+  halftime: {
+    hometeam: string
+    awayteam: string
+  }
 }
 
 interface ContextTypes {
-  isAlive: boolean
-  setIsAlive: React.Dispatch<React.SetStateAction<boolean>>
+  isLive: boolean
+  setIsLive: React.Dispatch<React.SetStateAction<boolean>>
   data: {
     competitions: string[]
-    matches: Array<Match>
+    matches: Match[]
   }
 }
 

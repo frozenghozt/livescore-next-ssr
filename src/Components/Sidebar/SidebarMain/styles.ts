@@ -26,23 +26,3 @@ export const ItemContainer = styled.div`
     transition: transform 200ms ease-in-out 0s;
   }
 `
-
-export const Item = styled.div`
-  display: flex;
-  width: 100%;
-  margin: 5px 0px;
-  align-items: center;
-  cursor: pointer;
-  & img {
-    width: 17px;
-    height: auto;
-    margin-right: 7px;
-    margin-bottom: 1px;
-  }
-  & a {
-    color: #557086;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-  }
-`

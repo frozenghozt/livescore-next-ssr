@@ -2,14 +2,15 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
-  margin-top: 12px;
+  flex-direction: column;
   padding: 5px 10px;
   background-color: ${props => props.theme.dark.backgroundMatches};
   border-radius: 5px;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+  margin-top: 12px;
 `
+
 export const Header = styled.div`
   display: grid;
   grid-template-columns: 80% 20%;

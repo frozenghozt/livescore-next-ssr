@@ -15,20 +15,37 @@ type PropTypes = {
   hometeam: string
   awayteam: string
   status: string
+  winner: string
+  onlyLive: boolean
+  fulltime: {
+    hometeam: string
+    awayteam: string
+  }
 }
 
 const MatchResult = ({
   id,
+  status,
+  winner,
+  onlyLive,
   hometeam,
   awayteam,
-  status
+  fulltime
 }: PropTypes): JSX.Element => {
   const { favmatches, setFavorite } = useContext(Favorite)
+  const liveCheck = status === 'IN_PLAY' || status === 'PAUSED'
+  if (onlyLive === true && liveCheck === false) {
+    return null
+  }
   return (
     <Container>
       <Timer>{statusConverter(status)}</Timer>
-      <TeamOne>{shortener(hometeam)}</TeamOne>
-      <Result>0 - 0</Result>
+      <TeamOne style={{ fontWeight: winner === 'HOME_TEAM' ? 500 : null }}>
+        {shortener(hometeam)}
+      </TeamOne>
+      <Result>
+        {fulltime.hometeam} - {fulltime.awayteam}
+      </Result>
       <TeamTwo>{shortener(awayteam)}</TeamTwo>
       {favmatches.indexOf(id) >= 0 ? (
         <StarIcon
@@ -37,7 +54,8 @@ const MatchResult = ({
             color: '#F4E122',
             cursor: 'pointer',
             height: '18px',
-            width: 'auto'
+            width: 'auto',
+            marginRight: '1px'
           }}
           onClick={() => {
             setFavorite({ type: 'REMOVE_FAVORITE', payload: id })
@@ -50,7 +68,8 @@ const MatchResult = ({
             color: '#F4E122',
             cursor: 'pointer',
             height: '18px',
-            width: 'auto'
+            width: 'auto',
+            marginRight: '1px'
           }}
           onClick={() => {
             setFavorite({ type: 'ADD_FAVORITE', payload: id })

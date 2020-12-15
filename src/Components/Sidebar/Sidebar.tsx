@@ -5,7 +5,7 @@ import SidebarMain from './SidebarMain/SidebarMain'
 // Styles
 import { Container } from './styles'
 
-const Sidebar: React.FC = () => {
+const Sidebar = (): JSX.Element => {
   return (
     <Container>
       <SidebarHeader />

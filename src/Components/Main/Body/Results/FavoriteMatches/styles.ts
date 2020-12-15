@@ -12,11 +12,12 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   display: grid;
-  grid-template-columns: 22px auto 20px;
+  grid-template-columns: 22px auto 22px;
   width: 100%;
   margin: 4px 0px 6px;
   padding: 1px 5px 0px;
 `
+
 export const Body = styled.div`
   display: flex;
   flex-direction: column;

@@ -18,27 +18,35 @@ type Match = {
   hometeam: string
   status: string
   winner: string
+  fulltime: {
+    hometeam: string
+    awayteam: string
+  }
+  halftime: {
+    hometeam: string
+    awayteam: string
+  }
 }
 
 type DataTypes = {
   data: {
     getMatchesByDate: {
       competitions: string[]
-      matches: Array<Match>
+      matches: Match[]
     }
   }
 }
 
 const Home = ({ data }: DataTypes): JSX.Element => {
-  const [isAlive, setIsAlive] = useState(false)
+  const [isLive, setIsLive] = useState(false)
   const matches = data.getMatchesByDate
   return (
     <>
       <Head>
         <title>Homepage</title>
       </Head>
-      <MatchesProvider value={{ isAlive, setIsAlive, data: matches }}>
-        <Slider />
+      <Slider />
+      <MatchesProvider value={{ isLive, setIsLive, data: matches }}>
         <PreferenceBar />
         <Results />
       </MatchesProvider>
@@ -61,6 +69,14 @@ export const getServerSideProps = async (): Promise<typeof data> => {
             countrycode
             status
             winner
+            fulltime {
+              hometeam
+              awayteam
+            }
+            halftime {
+              hometeam
+              awayteam
+            }
           }
         }
       }

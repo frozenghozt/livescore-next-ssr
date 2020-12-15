@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
 // Styles
 import { Container, LeftSide, CenterSide, RightSide } from './styles'
 // Components
@@ -11,7 +12,11 @@ const Header: React.FC = () => {
     <>
       {isModalOpen && <Sign onClose={() => SetIsModalOpen(false)} />}
       <Container>
-        <LeftSide>Logo</LeftSide>
+        <LeftSide>
+          <Link href="/">
+            <a>Logo</a>
+          </Link>
+        </LeftSide>
         <CenterSide>
           <SearchBar />
         </CenterSide>

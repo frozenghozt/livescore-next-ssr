@@ -13,7 +13,7 @@ import { Favorite } from '../../../../../context/FavoriteContext'
 
 const FavoriteMatches: React.FC = () => {
   const [expand, setExpand] = useState(true)
-  const { data } = useContext(Matches)
+  const { data, isLive } = useContext(Matches)
   const { favmatches } = useContext(Favorite)
   return (
     <Container>
@@ -22,7 +22,9 @@ const FavoriteMatches: React.FC = () => {
           style={{
             justifySelf: 'start',
             alignSelf: 'center',
-            color: '#F4E122'
+            color: '#F4E122',
+            height: '22px',
+            width: 'auto'
           }}
         />
         <Tag>
@@ -55,14 +57,17 @@ const FavoriteMatches: React.FC = () => {
       {expand && (
         <Body>
           {data.matches.map(
-            ({ id, status, hometeam, awayteam }, i) =>
+            ({ id, status, winner, hometeam, awayteam, fulltime }, i) =>
               favmatches.indexOf(id) >= 0 && (
                 <MatchResult
                   key={i}
                   id={id}
                   status={status}
+                  winner={winner}
+                  onlyLive={isLive}
                   hometeam={hometeam}
                   awayteam={awayteam}
+                  fulltime={fulltime}
                 />
               )
           )}

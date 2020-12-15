@@ -17,7 +17,7 @@ type PropTypes = {
 }
 
 const LeagueMatch = ({ title }: PropTypes): JSX.Element => {
-  const { data } = useContext(Matches)
+  const { data, isLive } = useContext(Matches)
   const [expand, setExpand] = useState(true)
   return (
     <Container>
@@ -57,14 +57,20 @@ const LeagueMatch = ({ title }: PropTypes): JSX.Element => {
       {expand && (
         <Body>
           {data.matches.map(
-            ({ id, status, hometeam, awayteam, competition }, i) =>
+            (
+              { id, status, winner, hometeam, awayteam, competition, fulltime },
+              i
+            ) =>
               title === competition && (
                 <MatchResult
                   key={i}
                   id={id}
                   status={status}
+                  winner={winner}
+                  onlyLive={isLive}
                   hometeam={hometeam}
                   awayteam={awayteam}
+                  fulltime={fulltime}
                 />
               )
           )}

@@ -8,7 +8,7 @@ export class ExternalApi extends RESTDataSource {
 
   async getMatches<T>(): Promise<T> {
     const data = await this.get('v2/matches', undefined, {
-      headers: { 'X-Auth-Token': '1b39af646ba543d48677355695a6f3b0' }
+      headers: { 'X-Auth-Token': process.env.EXTERNAL_API_SECRET }
     })
     return data
   }

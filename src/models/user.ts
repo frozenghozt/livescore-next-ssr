@@ -1,11 +1,5 @@
 import mongoose, { Document } from 'mongoose'
 
-export interface UserShape {
-  email: string
-  username: string
-  password: string
-}
-
 export interface IUser extends Document {
   email: string
   username: string

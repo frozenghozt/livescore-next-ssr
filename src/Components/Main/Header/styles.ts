@@ -16,6 +16,10 @@ export const LeftSide = styled.div`
   align-items: center;
   height: 100%;
   width: 33%;
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
 `
 
 export const CenterSide = styled.div`

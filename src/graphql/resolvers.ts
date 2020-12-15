@@ -1,15 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import bcrypt from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 import validator from 'validator'
+import { createAccessToken, createRefreshToken } from '../helpers/auth'
+import { PubSub } from 'apollo-server'
 // Models
-import User, { UserShape } from '../models/user'
+import User from '../models/user'
 // Utils
 import connectDB from '../helpers/connectDB'
+// Types
+import { RegisterArgs, LoginArgs, LoginContext, LoginResponse } from './types'
 
 connectDB()
+const pubsub = new PubSub()
 
 export const resolvers = {
+  Subscription: {
+    messageAdded: {
+      subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED'])
+    }
+  },
   Query: {
     // Get match data
     getMatchesByDate: async (_, args, { dataSources }) => {
@@ -36,11 +46,11 @@ export const resolvers = {
           winner: match.score.winner,
           fulltime: {
             hometeam: match.score.fullTime.homeTeam,
-            awayteam: match.score.fullTime.homeTeam
+            awayteam: match.score.fullTime.awayTeam
           },
           halftime: {
             hometeam: match.score.halfTime.homeTeam,
-            awayteam: match.score.halfTime.homeTeam
+            awayteam: match.score.halfTime.awayteam
           }
         })
       })
@@ -52,8 +62,11 @@ export const resolvers = {
     }
   },
   Mutation: {
+    addMessage: async (_, args) => {
+      pubsub.publish('MESSAGE_ADDED', { messageAdded: args })
+    },
     // Create Account Mutation
-    createUser: async (_, args: UserShape): Promise<UserShape> => {
+    createUser: async (_, args: RegisterArgs): Promise<RegisterArgs> => {
       // Validation
       const errors = []
       // Email validation
@@ -76,6 +89,10 @@ export const resolvers = {
         errors.push({
           message: 'Password too short!'
         })
+      } else if (args.password !== args.repeatedpw) {
+        errors.push({
+          message: 'Password doesnt match'
+        })
       }
       // Throw input Error
       if (errors.length > 0) {
@@ -95,7 +112,7 @@ export const resolvers = {
         throw usernameError
       }
       // Encrypts the password received
-      const encryptedPw = await bcrypt.hash(args.password, 12)
+      const encryptedPw = await hash(args.password, 12)
       // Creates a new User model instance
       const newUser = new User({
         email: args.email,
@@ -106,6 +123,33 @@ export const resolvers = {
       const savedUser = await newUser.save()
       // Returns the registration details
       return savedUser
+    },
+    // Login Account Mutation
+    login: async (
+      _,
+      args: LoginArgs,
+      context: LoginContext
+    ): Promise<LoginResponse> => {
+      const user = await User.findOne({ username: args.username }).exec()
+      if (!user) {
+        throw new Error('could not find user')
+      }
+      const isValid = await compare(args.password, user.password)
+      if (!isValid) {
+        throw new Error('Wrong password')
+      }
+
+      context.cookies.set('auth-token', createRefreshToken(user), {
+        httpOnly: true,
+        sameSite: 'lax',
+        // here we put 6 hours, but you can put whatever you want (the shorter the safer, but also more annoying)
+        maxAge: 6 * 60 * 60 * 1000 * 200,
+        secure: process.env.NODE_ENV === 'production'
+      })
+
+      return {
+        accessToken: createAccessToken(user)
+      }
     }
   }
 }
